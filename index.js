@@ -20,8 +20,14 @@ document.getElementById('aggregateResultsButton').addEventListener('click', asyn
       complete: function(results) {
         results.data.forEach(row => {
           const contest = row['Contest'];
-          const selection = row['Selection'];
+          const selection = row['Selection'].includes('Write-In')
+            ? 'Write-In'
+            : row['Selection'];
           const votes = parseInt(row['Total Votes'], 10);
+
+          if (selection === 'Overvotes' || selection === 'Undervotes') {
+            return;
+          }
 
           const key = [contest, selection].join(SEPARATOR);
           aggregatedResults.set(key, {
